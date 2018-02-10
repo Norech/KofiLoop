@@ -1,0 +1,478 @@
+
+import { startLoop, registerLoop } from './index';
+import {EventEmitter} from 'events';
+
+    
+/**
+ * Loop status properties.
+ * @internal
+ * @private
+ */
+export interface LoopStatus
+{
+    isStopped: boolean;
+    isPending: boolean;
+    lastReturnedValue: any;
+    lastThrownError: any;
+    loopStep: number;
+    deltaTimeStart?: [number, number];
+    deltaTime: number;
+}
+
+
+
+/**
+ * The loop handler.
+ * @internal
+ * @private
+ */
+export default class Loop extends EventEmitter
+{
+    status: LoopStatus;
+
+    loopReturn: LoopReturn;
+    loopSelf: LoopSelf;
+
+    interval: number;
+    args: any[];
+
+    finishEventCalled: boolean = false;
+
+    protected loopHandler?: Promise<any> | ((this: LoopSelf, ...args: any[])=>any);
+
+    /**
+     * Constructor of the Loop class.
+     * @internal
+     */
+    constructor(handler: Promise<any> | ((this: LoopSelf, ...args: any[])=>any), interval: number, ...args: any[])
+    {
+        super();
+        this.setMaxListeners(50);
+
+        if(typeof interval !== "number")
+            throw new TypeError("Interval argument is not a number.");
+
+        this.status = {
+            isStopped: true,
+            isPending: false,
+            lastThrownError: null,
+            lastReturnedValue: undefined,
+            loopStep: 1,
+            deltaTime: 0
+        };
+        
+        this.interval = interval;
+        this.args = args;
+
+        this.loopReturn = new LoopReturn(this);
+        this.loopSelf = new LoopSelf(this);
+
+        this.loopHandler = handler;
+
+        this.listenEvents();
+    }
+
+    measureTime(start?: [number, number]) {
+        if ( !start ) return process.hrtime();
+        var end = process.hrtime(start);
+        return Math.round((end[0]*1000) + (end[1]/1000000));
+    }
+
+    /**
+     * Runs the loop.
+     */
+    run()
+    {
+        if(this.status.isStopped){
+            this.emit('start');
+            this.status.isStopped = false;
+            this.executeStep();
+        } else {
+            throw new Error('Loop not stopped.');
+        }
+    }
+
+    /**
+     * Returns if loop is stopped.
+     */
+    isStopped()
+    {
+        if((this.status.isStopped || this.status.lastThrownError != null) && !this.finishEventCalled){
+            this.emit('finish');
+            this.finishEventCalled = true;
+        }
+        return this.status.isStopped || this.status.lastThrownError != null;
+    }
+
+    /**
+     * Gets the loop return value.
+     */
+    getReturnValue()
+    {
+        return this.loopReturn;
+    }
+
+    /**
+     * Executes a step.
+     */
+    executeStep()
+    {
+        if(this.isStopped()) return;
+
+        this.emit('stepStart');
+        this.status.lastReturnedValue = undefined;
+
+        setTimeout(() => {
+            if(this.isStopped()) return;
+                
+            this.emit('stepExecute');
+
+            var handler = this.loopHandler;
+            
+            if(typeof handler === "function")
+            {
+                try
+                {
+                    var value = handler.apply(this.loopSelf, ...this.args);
+                    if(this.status.lastReturnedValue === undefined){
+                        this.status.lastReturnedValue = value;
+                    }
+                    this.finishStep();
+                }
+                catch (error)
+                {
+                    this.status.lastThrownError = error;
+                    this.finishStep();
+                }
+            }
+
+            // TODO: Add a full support for Promises - this one is too restricted.
+            else if(typeof handler !== "undefined" && typeof handler.then === "function")
+            {
+                try
+                {
+                    var loop: any = handler.then((value: any) => {
+                        this.status.lastReturnedValue = value;
+                        this.finishStep();
+                    })
+                    if(typeof loop.catch === "function")
+                    {
+                        loop.catch((error: any) => {
+                            this.status.lastThrownError = error;
+                            this.finishStep();
+                        })
+                    }
+                }
+                catch (error)
+                {
+                    this.status.lastThrownError = error;
+                    this.finishStep();
+                }
+            }
+            else
+            {
+                throw new TypeError('Handler argument is not a function or a promise.');
+            }
+
+        }, this.interval);
+
+        return this;
+    }
+
+    /**
+     * Finishs the current step and starts a new step.
+     */
+    finishStep()
+    {  
+        if(!this.status.isPending)
+            this.emit('stepFinish');
+
+        if(this.isStopped())
+            this.emit('finish');
+
+        if(!this.isStopped() && !this.status.isPending)
+            this.executeStep();
+    }
+
+    /**
+     * Registers events.
+     */
+    listenEvents()
+    {
+        var status = this.status;
+        
+        this.on('stepStart', () => 
+        {
+            this.status.deltaTimeStart = <[number, number]>this.measureTime();
+        })
+
+        this.on('stepFinish', () =>
+        {
+            this.status.deltaTime = <number>this.measureTime(this.status.deltaTimeStart);
+            status.loopStep++;
+        });
+    }
+    
+}
+
+
+
+/**
+ * Class used to interact inside of loop.
+ * Primary used as scope ('this' reference) in loop handlers.
+ * 
+ * @protected
+ * @use_reference Never create the object yourself and always use reference.
+ */
+export class LoopSelf
+{
+
+    protected loop: Loop;
+
+    /**
+     * Current loop interval.
+     * @readonly
+     * @returns {number}
+     */
+    get interval(): number
+    {
+        return this.loop.interval;
+    }
+
+    /**
+     * Time difference between last step initialization and last step end.
+     * @readonly
+     * @returns {number}
+     */
+    get deltaTime(): number
+    {
+        return this.loop.status.deltaTime;
+    }
+
+    /**
+     * Current loop step.
+     * @readonly
+     * @returns {number}
+     */
+    get step(): number
+    {
+        return this.loop.status.loopStep;
+    }
+
+    /**
+     * Value of the loop step.
+     */
+    set value(value: any)
+    {
+        this.loop.status.lastReturnedValue = value;
+    }
+    get value(): any
+    {
+        return this.loop.status.lastReturnedValue;
+    }
+
+    /**
+     * Constructor of the LoopSelf class.
+     * @hidden
+     */
+    constructor(loop: Loop)
+    {
+        this.loop = loop;
+
+        this.listenEvents();
+    }
+
+    /**
+     * Stop current loop.
+     */
+    stop(value?: any)
+    {
+        if(typeof value !== "undefined")
+            this.value = value;
+
+        this.loop.status.isStopped = true;
+    }
+
+    /**
+     * Start a subloop and pause current loop until the end of the subloop.
+     * @param handler The function to loop
+     * @param interval The interval in milliseconds
+     * @param args Some arguments to pass to function
+     * 
+     * @see {@link LoopSelf} for handler scope ('this' reference).
+     */
+    startLoop(handler: Promise<any> | ((this: LoopSelf, ...args: any[])=>any), interval: number, ...args: any[])
+    {
+        this.loop.status.isPending = true;
+
+        return startLoop(handler, interval, ...args).parent(this.loop);
+    }
+
+    // EVENTS
+
+    /**
+     * Listen to events
+     * @ignore
+     */
+    protected listenEvents(){
+        //...
+    }
+    
+}
+
+
+
+/**
+ * Class returned by loops.
+ * 
+ * @protected
+ * @use_reference Never create the object yourself and always use reference.
+ */
+export class LoopReturn extends EventEmitter implements PromiseLike<any>
+{
+    protected loop: Loop;
+    protected parentLoop?: Loop;
+
+    /**
+     * Constructor of the Loop class.
+     * @hidden
+     */
+    constructor(loop: Loop)
+    {
+        super();
+        this.setMaxListeners(Infinity);
+
+        this.loop = loop;
+        this.listenEvents();
+    }
+
+    /**
+     * Starts or restarts the loop.
+     */
+    run()
+    {
+        this.loop.run();
+        return this;
+    }
+
+    /**
+     * Called when a loop step is finished.
+     */
+    step(callback: (loop: LoopSelf, value: any)=>void, step?: number)
+    {
+        if(typeof step !== "undefined"){
+            var stepInt = parseInt(step.toString());
+            this.on('step-' + stepInt, callback);
+        }else{
+            this.on('step', callback);
+        }
+
+        return this;
+    }
+
+    /**
+     * Sets a loop as parent loop.
+     * @param loop The parent loop
+     */
+    parent(loop: Loop)
+    {
+        if(typeof this.parentLoop !== "undefined")
+            throw new Error("Parent is already set");
+
+        this.parentLoop = loop;
+        this.parentLoop.status.isPending = true;
+        return this;
+    }
+
+    /**
+     * Starts a loop after the end of the current loop.
+     * @param handler The function to loop
+     * @param interval The interval in milliseconds
+     * @param args Some arguments to pass to function
+     * 
+     * @see {@link LoopSelf} for handler scope ('this' reference).
+     */
+    startLoop(handler: Promise<any> | ((this: LoopSelf, ...args: any[])=>any), interval: number, ...args: any[])
+    {
+        var loop = registerLoop(handler, interval, ...args)
+
+        this.loop.once('finish', () => loop.run());
+
+        return loop;
+    }
+
+    /**
+     * Called when loop is stopped.
+     */
+    end(callback: (value: any)=>any, errorCallback?: (err: any)=>any)
+    {
+        this.once('end', callback);
+        if(typeof errorCallback !== "undefined")
+            this.error(errorCallback);
+
+        return this;
+    }
+
+    /**
+     * Alias for {@link end}: Called when loop is stopped.
+     */
+    then(callback: (value: any)=>any, errorCallback: (err: any)=>any)
+    {
+        return this.end(callback, errorCallback);
+    }
+
+    /**
+     * Called when an uncaught error is thrown.
+     */
+    error(callback: (err: any)=>any)
+    {
+        this.once('error', callback);
+        return this;
+    }
+
+    /**
+     * Alias for {@link error}: Called when an uncaught error is thrown.
+     */
+    catch(callback: ()=>any)
+    {
+        return this.error(callback);
+    }
+
+    // EVENTS
+
+    /**
+     * Listen to events
+     * @ignore
+     */
+    protected listenEvents(){
+        var loop = this.loop;
+        var status = this.loop.status;
+
+        loop.on('stepStart', () =>
+        {
+            this.emit('step', this.loop.loopSelf, status.lastReturnedValue);
+            this.emit('step-' + status.loopStep, this.loop.loopSelf, status.lastReturnedValue);
+            return;
+        });
+
+        loop.once('finish', () =>
+        {
+            if(status.lastThrownError != null)
+            {
+                this.emit('error', status.lastThrownError);
+            }
+            else
+            {
+                this.emit('end', status.lastReturnedValue);
+            }
+
+            this.emit('terminated', this.loop);
+
+            if(this.parentLoop != null){
+                this.parentLoop.status.isPending = false;
+                this.parentLoop.finishStep();
+            }
+        });
+    }
+    
+}

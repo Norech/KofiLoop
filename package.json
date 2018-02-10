@@ -1,0 +1,24 @@
+{
+    "name": "kofiloop",
+    "version": "1.0.0",
+    "description": "Fast and powered loops under caffeine",
+    "main": "dist/KofiLoop/index.js",
+    "types": "dist/KofiLoop/index.d.ts",
+    "scripts": {
+        "prepare": "npm run build && npm run doc",
+        "build": "./node_modules/.bin/tsc",
+        "doc": "./node_modules/.bin/typedoc --readme none --name \"KofiLoop\" --entryPoint \"KofiLoop\" --mode modules --theme node_modules/typedoc-clarity-theme/bin --excludeProtected --external-modulemap \".*/([\\w\\-_]+)/\" --out doc/ src/",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [],
+    "author": "Alexis Norech <alexis.norech@gmail.com>",
+    "license": "ISC",
+    "dependencies": {},
+    "devDependencies": {
+        "@types/node": "^9.4.1",
+        "typedoc": "^0.10.0",
+        "typedoc-clarity-theme": "^1.1.0",
+        "typedoc-plugin-external-module-map": "0.0.7",
+        "typescript": "^2.7.1"
+    }
+}

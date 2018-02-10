@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "lib": [
+            "es2015"
+        ],
+        "module": "commonjs",
+        "declaration": true,
+        "rootDir": "./src",
+        "outDir": "./dist",
+        "strict": true,
+    },
+    "include": [
+        "src/KofiLoop/**/*"
+    ]
+}
