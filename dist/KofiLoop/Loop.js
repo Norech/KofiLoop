@@ -15,7 +15,7 @@ var events_1 = require("events");
 /**
  * The loop handler.
  * @internal
- * @hidden
+ * @private
  */
 var Loop = /** @class */ (function (_super) {
     __extends(Loop, _super);
@@ -166,6 +166,9 @@ exports.default = Loop;
 /**
  * Class used to interact inside of loop.
  * Primary used as scope ('this' reference) in loop handlers.
+ *
+ * @protected
+ * @use_reference Never create the object yourself and always use reference.
  */
 var LoopSelf = /** @class */ (function () {
     /**
@@ -179,7 +182,8 @@ var LoopSelf = /** @class */ (function () {
     Object.defineProperty(LoopSelf.prototype, "interval", {
         /**
          * Current loop interval.
-         * @read-only
+         * @readonly
+         * @returns {number}
          */
         get: function () {
             return this.loop.interval;
@@ -190,7 +194,8 @@ var LoopSelf = /** @class */ (function () {
     Object.defineProperty(LoopSelf.prototype, "deltaTime", {
         /**
          * Time difference between last step initialization and last step end.
-         * @read-only
+         * @readonly
+         * @returns {number}
          */
         get: function () {
             return this.loop.status.deltaTime;
@@ -201,7 +206,8 @@ var LoopSelf = /** @class */ (function () {
     Object.defineProperty(LoopSelf.prototype, "step", {
         /**
          * Current loop step.
-         * @read-only
+         * @readonly
+         * @returns {number}
          */
         get: function () {
             return this.loop.status.loopStep;
@@ -259,12 +265,15 @@ var LoopSelf = /** @class */ (function () {
 exports.LoopSelf = LoopSelf;
 /**
  * Class returned by loops.
+ *
+ * @protected
+ * @use_reference Never create the object yourself and always use reference.
  */
 var LoopReturn = /** @class */ (function (_super) {
     __extends(LoopReturn, _super);
     /**
      * Constructor of the Loop class.
-     * @internal
+     * @hidden
      */
     function LoopReturn(loop) {
         var _this = _super.call(this) || this;

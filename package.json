@@ -7,12 +7,19 @@
     "scripts": {
         "prepare": "npm run build && npm run doc",
         "build": "./node_modules/.bin/tsc",
-        "doc": "./node_modules/.bin/typedoc --readme none --name \"KofiLoop\" --entryPoint \"KofiLoop\" --mode modules --theme node_modules/typedoc-clarity-theme/bin --excludeProtected --external-modulemap \".*/([\\w\\-_]+)/\" --out doc/ src/",
+        "doc": "./node_modules/.bin/typedoc --readme none --name \"KofiLoop\" --entryPoint \"KofiLoop\" --mode modules --theme node_modules/typedoc-clarity-theme/bin --excludeProtected --external-modulemap \".*/([\\w\\-_]+)/\" --out docs/ src/",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "keywords": [],
     "author": "Alexis Norech <alexis.norech@gmail.com>",
-    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/Norech/KofiLoop/issues"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Norech/KofiLoop/"
+    },
+    "license": "MIT",
     "dependencies": {},
     "devDependencies": {
         "@types/node": "^9.4.1",

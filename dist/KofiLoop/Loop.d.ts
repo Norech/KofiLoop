@@ -3,7 +3,7 @@ import { EventEmitter } from 'events';
 /**
  * Loop status properties.
  * @internal
- * @hidden
+ * @private
  */
 export interface LoopStatus {
     isStopped: boolean;
@@ -17,7 +17,7 @@ export interface LoopStatus {
 /**
  * The loop handler.
  * @internal
- * @hidden
+ * @private
  */
 export default class Loop extends EventEmitter {
     status: LoopStatus;
@@ -61,22 +61,28 @@ export default class Loop extends EventEmitter {
 /**
  * Class used to interact inside of loop.
  * Primary used as scope ('this' reference) in loop handlers.
+ *
+ * @protected
+ * @use_reference Never create the object yourself and always use reference.
  */
 export declare class LoopSelf {
     protected loop: Loop;
     /**
      * Current loop interval.
-     * @read-only
+     * @readonly
+     * @returns {number}
      */
     readonly interval: number;
     /**
      * Time difference between last step initialization and last step end.
-     * @read-only
+     * @readonly
+     * @returns {number}
      */
     readonly deltaTime: number;
     /**
      * Current loop step.
-     * @read-only
+     * @readonly
+     * @returns {number}
      */
     readonly step: number;
     /**
@@ -109,13 +115,16 @@ export declare class LoopSelf {
 }
 /**
  * Class returned by loops.
+ *
+ * @protected
+ * @use_reference Never create the object yourself and always use reference.
  */
 export declare class LoopReturn extends EventEmitter implements PromiseLike<any> {
     protected loop: Loop;
     protected parentLoop?: Loop;
     /**
      * Constructor of the Loop class.
-     * @internal
+     * @hidden
      */
     constructor(loop: Loop);
     /**

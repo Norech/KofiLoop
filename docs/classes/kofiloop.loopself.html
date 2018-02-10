@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>KofiLoop | KofiLoop</title>
+	<title>LoopSelf | KofiLoop</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<style type="text/css">/*! normalize.css v1.1.3 | MIT License | git.io/normalize */
@@ -913,77 +913,189 @@ img { max-width: 100%; }
 <nav class="tsd-navigation secondary">
 	<ul>
 		<li class=" tsd-kind-class tsd-parent-kind-external-module tsd-is-private">
-			<a href="classes/kofiloop.loop.html" class="tsd-kind-icon">Loop</a>
+			<a href="kofiloop.loop.html" class="tsd-kind-icon">Loop</a>
 		</li>
 		<li class=" tsd-kind-class tsd-parent-kind-external-module tsd-is-protected">
-			<a href="classes/kofiloop.loopreturn.html" class="tsd-kind-icon">Loop<wbr>Return</a>
+			<a href="kofiloop.loopreturn.html" class="tsd-kind-icon">Loop<wbr>Return</a>
 		</li>
-		<li class=" tsd-kind-class tsd-parent-kind-external-module tsd-is-protected">
-			<a href="classes/kofiloop.loopself.html" class="tsd-kind-icon">Loop<wbr>Self</a>
+		<li class="current tsd-kind-class tsd-parent-kind-external-module tsd-is-protected">
+			<a href="kofiloop.loopself.html" class="tsd-kind-icon">Loop<wbr>Self</a>
+			<ul>
+				<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+					<a href="kofiloop.loopself.html#deltatime" class="tsd-kind-icon">delta<wbr>Time</a>
+				</li>
+				<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+					<a href="kofiloop.loopself.html#interval" class="tsd-kind-icon">interval</a>
+				</li>
+				<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+					<a href="kofiloop.loopself.html#step" class="tsd-kind-icon">step</a>
+				</li>
+				<li class=" tsd-kind-accessor tsd-parent-kind-class">
+					<a href="kofiloop.loopself.html#value" class="tsd-kind-icon">value</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class">
+					<a href="kofiloop.loopself.html#startloop" class="tsd-kind-icon">start<wbr>Loop</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class">
+					<a href="kofiloop.loopself.html#stop" class="tsd-kind-icon">stop</a>
+				</li>
+			</ul>
 		</li>
 		<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-is-private">
-			<a href="interfaces/kofiloop.loopstatus.html" class="tsd-kind-icon">Loop<wbr>Status</a>
+			<a href="../interfaces/kofiloop.loopstatus.html" class="tsd-kind-icon">Loop<wbr>Status</a>
 		</li>
 		<li class=" tsd-kind-function tsd-parent-kind-external-module">
-			<a href="index.html#registerloop" class="tsd-kind-icon">register<wbr>Loop</a>
+			<a href="../index.html#registerloop" class="tsd-kind-icon">register<wbr>Loop</a>
 		</li>
 		<li class=" tsd-kind-function tsd-parent-kind-external-module">
-			<a href="index.html#startloop" class="tsd-kind-icon">start<wbr>Loop</a>
+			<a href="../index.html#startloop" class="tsd-kind-icon">start<wbr>Loop</a>
 		</li>
 	</ul>
 </nav>
 <div class="container container-main">
 	<div class="content-wrap">
+		<section class="tsd-panel tsd-comment">
+			<div class="tsd-comment tsd-typography">
+				<div class="lead">
+					<p>Class used to interact inside of loop.
+					Primary used as scope (&#39;this&#39; reference) in loop handlers.</p>
+				</div>
+				<dl class="tsd-comment-tags">
+					<dt>use_reference</dt>
+					<dd><p>Never create the object yourself and always use reference.</p>
+					</dd>
+				</dl>
+			</div>
+		</section>
+		<section class="tsd-panel tsd-hierarchy">
+			<h3>Hierarchy</h3>
+			<ul class="tsd-hierarchy">
+				<li>
+					<span class="target">LoopSelf</span>
+				</li>
+			</ul>
+		</section>
 		<section class="tsd-panel-group tsd-index-group">
 			<h2>Index</h2>
 			<section class="tsd-panel tsd-index-panel">
 				<div class="tsd-index-content">
-					<section class="tsd-index-section tsd-is-private-protected">
-						<h3>Classes</h3>
+					<section class="tsd-index-section ">
+						<h3>Accessors</h3>
 						<ul class="tsd-index-list">
-							<li class="tsd-kind-class tsd-parent-kind-external-module tsd-is-private"><a href="classes/kofiloop.loop.html" class="tsd-kind-icon">Loop</a></li>
-							<li class="tsd-kind-class tsd-parent-kind-external-module tsd-is-protected"><a href="classes/kofiloop.loopreturn.html" class="tsd-kind-icon">Loop<wbr>Return</a></li>
-							<li class="tsd-kind-class tsd-parent-kind-external-module tsd-is-protected"><a href="classes/kofiloop.loopself.html" class="tsd-kind-icon">Loop<wbr>Self</a></li>
-						</ul>
-					</section>
-					<section class="tsd-index-section tsd-is-private tsd-is-private-protected">
-						<h3>Interfaces</h3>
-						<ul class="tsd-index-list">
-							<li class="tsd-kind-interface tsd-parent-kind-external-module tsd-is-private"><a href="interfaces/kofiloop.loopstatus.html" class="tsd-kind-icon">Loop<wbr>Status</a></li>
+							<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="kofiloop.loopself.html#deltatime" class="tsd-kind-icon">delta<wbr>Time</a></li>
+							<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="kofiloop.loopself.html#interval" class="tsd-kind-icon">interval</a></li>
+							<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="kofiloop.loopself.html#step" class="tsd-kind-icon">step</a></li>
+							<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="kofiloop.loopself.html#value" class="tsd-kind-icon">value</a></li>
 						</ul>
 					</section>
 					<section class="tsd-index-section ">
-						<h3>Functions</h3>
+						<h3>Methods</h3>
 						<ul class="tsd-index-list">
-							<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="index.html#registerloop" class="tsd-kind-icon">register<wbr>Loop</a></li>
-							<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="index.html#startloop" class="tsd-kind-icon">start<wbr>Loop</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class"><a href="kofiloop.loopself.html#startloop" class="tsd-kind-icon">start<wbr>Loop</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class"><a href="kofiloop.loopself.html#stop" class="tsd-kind-icon">stop</a></li>
 						</ul>
 					</section>
 				</div>
 			</section>
 		</section>
 		<section class="tsd-panel-group tsd-member-group ">
-			<h2>Functions</h2>
-			<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module">
-				<a name="registerloop" class="tsd-anchor"></a>
-				<h3>register<wbr>Loop</h3>
-				<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module">
-					<li class="tsd-signature tsd-kind-icon">register<wbr>Loop<span class="tsd-signature-symbol">(</span>handler<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">function</span>, interval<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, <span class="tsd-signature-symbol">...</span>args<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="classes/kofiloop.loopreturn.html" class="tsd-signature-type">LoopReturn</a></li>
+			<h2>Accessors</h2>
+			<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+				<a name="deltatime" class="tsd-anchor"></a>
+				<h3>delta<wbr>Time</h3>
+				<div class="tsd-signature tsd-kind-icon">delta<wbr>Time<span class="tsd-signature-symbol">:</span> </div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Norech/KofiLoop/blob/84c57c5/src/KofiLoop/Loop.ts#L247">Loop.ts:247</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Time difference between last step initialization and last step end.</p>
+					</div>
+					<dl class="tsd-comment-tags">
+						<dt>readonly</dt>
+						<dd></dd>
+					</dl>
+				</div>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+				<a name="interval" class="tsd-anchor"></a>
+				<h3>interval</h3>
+				<div class="tsd-signature tsd-kind-icon">interval<span class="tsd-signature-symbol">:</span> </div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Norech/KofiLoop/blob/84c57c5/src/KofiLoop/Loop.ts#L237">Loop.ts:237</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Current loop interval.</p>
+					</div>
+					<dl class="tsd-comment-tags">
+						<dt>readonly</dt>
+						<dd></dd>
+					</dl>
+				</div>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+				<a name="step" class="tsd-anchor"></a>
+				<h3>step</h3>
+				<div class="tsd-signature tsd-kind-icon">step<span class="tsd-signature-symbol">:</span> </div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Norech/KofiLoop/blob/84c57c5/src/KofiLoop/Loop.ts#L257">Loop.ts:257</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Current loop step.</p>
+					</div>
+					<dl class="tsd-comment-tags">
+						<dt>readonly</dt>
+						<dd></dd>
+					</dl>
+				</div>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+				<a name="value" class="tsd-anchor"></a>
+				<h3>value</h3>
+				<div class="tsd-signature tsd-kind-icon">value<span class="tsd-signature-symbol">:</span> </div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Norech/KofiLoop/blob/84c57c5/src/KofiLoop/Loop.ts#L265">Loop.ts:265</a></li>
+						<li>Defined in <a href="https://github.com/Norech/KofiLoop/blob/84c57c5/src/KofiLoop/Loop.ts#L269">Loop.ts:269</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Value of the loop step.</p>
+					</div>
+				</div>
+			</section>
+		</section>
+		<section class="tsd-panel-group tsd-member-group ">
+			<h2>Methods</h2>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+				<a name="startloop" class="tsd-anchor"></a>
+				<h3>start<wbr>Loop</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+					<li class="tsd-signature tsd-kind-icon">start<wbr>Loop<span class="tsd-signature-symbol">(</span>handler<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">function</span>, interval<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, <span class="tsd-signature-symbol">...</span>args<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="kofiloop.loopreturn.html" class="tsd-signature-type">LoopReturn</a></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in index.ts:26</li>
+								<li>Defined in <a href="https://github.com/Norech/KofiLoop/blob/84c57c5/src/KofiLoop/Loop.ts#L304">Loop.ts:304</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
 							<div class="lead">
-								<p>Registers a new loop but don&#39;t start it.</p>
+								<p>Start a subloop and pause current loop until the end of the subloop.</p>
 							</div>
 							<dl class="tsd-comment-tags">
 								<dt>see</dt>
-								<dd><p><a href="classes/kofiloop.loopself.html">LoopSelf</a> for handler scope (&#39;this&#39; reference).</p>
+								<dd><p><a href="kofiloop.loopself.html">LoopSelf</a> for handler scope (&#39;this&#39; reference).</p>
 								</dd>
 							</dl>
 						</div>
@@ -991,6 +1103,9 @@ img { max-width: 100%; }
 						<ul class="tsd-parameters">
 							<li>
 								<h5>handler: <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">function</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The function to loop</p>
+								</div>
 							</li>
 							<li>
 								<h5>interval: <span class="tsd-signature-type">number</span></h5>
@@ -1005,52 +1120,35 @@ img { max-width: 100%; }
 								</div>
 							</li>
 						</ul>
-						<h4 class="tsd-returns-title">Returns <a href="classes/kofiloop.loopreturn.html" class="tsd-signature-type">LoopReturn</a></h4>
+						<h4 class="tsd-returns-title">Returns <a href="kofiloop.loopreturn.html" class="tsd-signature-type">LoopReturn</a></h4>
 					</li>
 				</ul>
 			</section>
-			<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module">
-				<a name="startloop" class="tsd-anchor"></a>
-				<h3>start<wbr>Loop</h3>
-				<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module">
-					<li class="tsd-signature tsd-kind-icon">start<wbr>Loop<span class="tsd-signature-symbol">(</span>handler<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">function</span>, interval<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, <span class="tsd-signature-symbol">...</span>args<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="classes/kofiloop.loopreturn.html" class="tsd-signature-type">LoopReturn</a></li>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+				<a name="stop" class="tsd-anchor"></a>
+				<h3>stop</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+					<li class="tsd-signature tsd-kind-icon">stop<span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in index.ts:11</li>
+								<li>Defined in <a href="https://github.com/Norech/KofiLoop/blob/84c57c5/src/KofiLoop/Loop.ts#L288">Loop.ts:288</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
 							<div class="lead">
-								<p>Starts a new loop.</p>
+								<p>Stop current loop.</p>
 							</div>
-							<dl class="tsd-comment-tags">
-								<dt>see</dt>
-								<dd><p><a href="classes/kofiloop.loopself.html">LoopSelf</a> for handler scope (&#39;this&#39; reference).</p>
-								</dd>
-							</dl>
 						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
-								<h5>handler: <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">function</span></h5>
-							</li>
-							<li>
-								<h5>interval: <span class="tsd-signature-type">number</span></h5>
-								<div class="tsd-comment tsd-typography">
-									<p>The interval in milliseconds</p>
-								</div>
-							</li>
-							<li>
-								<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>args: <span class="tsd-signature-type">any[]</span></h5>
-								<div class="tsd-comment tsd-typography">
-									<p>Some arguments to pass to function</p>
-								</div>
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> value: <span class="tsd-signature-type">any</span></h5>
 							</li>
 						</ul>
-						<h4 class="tsd-returns-title">Returns <a href="classes/kofiloop.loopreturn.html" class="tsd-signature-type">LoopReturn</a></h4>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 					</li>
 				</ul>
 			</section>

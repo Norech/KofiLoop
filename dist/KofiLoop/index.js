@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var Loop = require("./Loop");
+var Loop_1 = require("./Loop");
 /**
  * Starts a new loop.
  * @param handle The function to loop
@@ -14,10 +14,9 @@ function startLoop(handler, interval) {
     for (var _i = 2; _i < arguments.length; _i++) {
         args[_i - 2] = arguments[_i];
     }
-    var loop = new ((_a = Loop.default).bind.apply(_a, [void 0, handler, interval].concat(args)))();
+    var loop = new (Loop_1.default.bind.apply(Loop_1.default, [void 0, handler, interval].concat(args)))();
     loop.run();
     return loop.getReturnValue();
-    var _a;
 }
 exports.startLoop = startLoop;
 /**
@@ -33,7 +32,6 @@ function registerLoop(handler, interval) {
     for (var _i = 2; _i < arguments.length; _i++) {
         args[_i - 2] = arguments[_i];
     }
-    return new ((_a = Loop.default).bind.apply(_a, [void 0, handler, interval].concat(args)))().getReturnValue();
-    var _a;
+    return new (Loop_1.default.bind.apply(Loop_1.default, [void 0, handler, interval].concat(args)))().getReturnValue();
 }
 exports.registerLoop = registerLoop;

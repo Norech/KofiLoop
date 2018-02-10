@@ -1,4 +1,4 @@
-import * as Loop from "./Loop";
+import { LoopReturn, LoopSelf } from './Loop';
 /**
  * Starts a new loop.
  * @param handle The function to loop
@@ -7,7 +7,7 @@ import * as Loop from "./Loop";
  *
  * @see {@link LoopSelf} for handler scope ('this' reference).
  */
-export declare function startLoop(handler: Promise<any> | ((this: Loop.LoopSelf, ...args: any[]) => any), interval: number, ...args: any[]): Loop.LoopReturn;
+export declare function startLoop(handler: Promise<any> | ((this: LoopSelf, ...args: any[]) => any), interval: number, ...args: any[]): LoopReturn;
 /**
  * Registers a new loop but don't start it.
  * @param handle The function to loop
@@ -16,4 +16,4 @@ export declare function startLoop(handler: Promise<any> | ((this: Loop.LoopSelf,
  *
  * @see {@link LoopSelf} for handler scope ('this' reference).
  */
-export declare function registerLoop(handler: Promise<any> | ((this: Loop.LoopSelf, ...args: any[]) => any), interval: number, ...args: any[]): Loop.LoopReturn;
+export declare function registerLoop(handler: Promise<any> | ((this: LoopSelf, ...args: any[]) => any), interval: number, ...args: any[]): LoopReturn;
