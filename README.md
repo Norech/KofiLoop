@@ -1,4 +1,6 @@
 # KofiLoop
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FNorech%2FKofiLoop.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FNorech%2FKofiLoop?ref=badge_shield)
+
 
 Fast and powered loops under caffeine.
 
@@ -70,3 +72,5 @@ The documentation is available at [kofiloop.js.org](https://kofiloop.js.org/).
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FNorech%2FKofiLoop.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FNorech%2FKofiLoop?ref=badge_large)
