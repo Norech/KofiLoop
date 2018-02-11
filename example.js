@@ -1,4 +1,4 @@
-var kofiloop = require('./dist');
+var kofiloop = require('./dist/KofiLoop');
 
 var i = 0;
 var planets = ["Mercure", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto"];

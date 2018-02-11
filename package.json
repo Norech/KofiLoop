@@ -5,15 +5,17 @@
     "main": "dist/KofiLoop/index.js",
     "types": "dist/KofiLoop/index.d.ts",
     "scripts": {
-        "prepare": "npm run build && npm run doc",
-        "build": "./node_modules/.bin/tsc",
-        "doc": "./node_modules/.bin/typedoc --readme none --name \"KofiLoop\" --entryPoint \"KofiLoop\" --mode modules --theme node_modules/typedoc-clarity-theme/bin --excludeProtected --external-modulemap \".*/([\\w\\-_]+)/\" --out docs/ src/",
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "prepare": "./node_modules/.bin/gulp",
+        "build": "./node_modules/.bin/gulp build",
+        "doc": "./node_modules/.bin/gulp doc",
+        "watch": "./node_modules/.bin/gulp watch",
+        "test": "./node_modules/.bin/mocha"
     },
     "keywords": [],
     "author": "Alexis Norech <alexis.norech@gmail.com>",
+    "homepage": "https://kofiloop.js.org/",
     "bugs": {
-        "url": "https://github.com/Norech/KofiLoop/issues"
+        "url": "https://github.com/Norech/KofiLoop/issues/"
     },
     "repository": {
         "type": "git",
@@ -23,6 +25,12 @@
     "dependencies": {},
     "devDependencies": {
         "@types/node": "^9.4.1",
+        "gulp": "^3.9.1",
+        "gulp-run-command": "0.0.9",
+        "gulp-sourcemaps": "^2.6.4",
+        "gulp-typescript": "^4.0.1",
+        "merge2": "^1.2.1",
+        "mocha": "^5.0.0",
         "typedoc": "^0.10.0",
         "typedoc-clarity-theme": "^1.1.0",
         "typedoc-plugin-external-module-map": "0.0.7",

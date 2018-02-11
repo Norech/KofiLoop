@@ -99,6 +99,7 @@ export default class Loop extends EventEmitter
     {
         if((this.status.isStopped || this.status.lastThrownError != null) && !this.finishEventCalled){
             this.emit('finish');
+            this.emit('afterFinish');
             this.finishEventCalled = true;
         }
         return this.status.isStopped || this.status.lastThrownError != null;
@@ -126,6 +127,7 @@ export default class Loop extends EventEmitter
             if(this.isStopped()) return;
                 
             this.emit('stepExecute');
+            this.emit('afterStepExecute');
 
             var handler = this.loopHandler;
             
@@ -185,10 +187,10 @@ export default class Loop extends EventEmitter
     finishStep()
     {  
         if(!this.status.isPending)
-            this.emit('stepFinish');
-
-        if(this.isStopped())
-            this.emit('finish');
+        {
+            this.emit('stepFinish')
+            this.emit('afterStepFinish');
+        }
 
         if(!this.isStopped() && !this.status.isPending)
             this.executeStep();
@@ -209,8 +211,12 @@ export default class Loop extends EventEmitter
         this.on('stepFinish', () =>
         {
             this.status.deltaTime = <number>this.measureTime(this.status.deltaTimeStart);
-            status.loopStep++;
         });
+
+        this.on('afterStepFinish', () => 
+        {
+            status.loopStep++;
+        })
     }
     
 }
@@ -257,6 +263,24 @@ export class LoopSelf
     get step(): number
     {
         return this.loop.status.loopStep;
+    }
+
+    /**
+     * Boolean indicating if the loop is stopped.
+     * @readonly
+     */
+    get isStopped()
+    {
+        return this.loop.isStopped();
+    }
+
+    /**
+     * Boolean indicating if the loop is pending.
+     * @readonly
+     */
+    get isPending()
+    {
+        return this.loop.status.isPending;
     }
 
     /**
@@ -347,12 +371,38 @@ export class LoopReturn extends EventEmitter implements PromiseLike<any>
     }
 
     /**
+     * Boolean indicating if the loop is stopped.
+     * @readonly
+     */
+    get isStopped()
+    {
+        return this.loop.isStopped();
+    }
+
+    /**
+     * Boolean indicating if the loop is pending.
+     * @readonly
+     */
+    get isPending()
+    {
+        return this.loop.status.isPending;
+    }
+
+    /**
      * Starts or restarts the loop.
      */
     run()
     {
         this.loop.run();
         return this;
+    }
+
+    /**
+     * Stops the loop.
+     */
+    stop()
+    {
+        this.loop.status.isStopped = true;
     }
 
     /**
@@ -448,7 +498,7 @@ export class LoopReturn extends EventEmitter implements PromiseLike<any>
         var loop = this.loop;
         var status = this.loop.status;
 
-        loop.on('stepStart', () =>
+        loop.on('stepFinish', () =>
         {
             this.emit('step', this.loop.loopSelf, status.lastReturnedValue);
             this.emit('step-' + status.loopStep, this.loop.loopSelf, status.lastReturnedValue);

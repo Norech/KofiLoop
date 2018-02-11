@@ -86,6 +86,16 @@ export declare class LoopSelf {
      */
     readonly step: number;
     /**
+     * Boolean indicating if the loop is stopped.
+     * @readonly
+     */
+    readonly isStopped: boolean;
+    /**
+     * Boolean indicating if the loop is pending.
+     * @readonly
+     */
+    readonly isPending: boolean;
+    /**
      * Value of the loop step.
      */
     value: any;
@@ -128,9 +138,23 @@ export declare class LoopReturn extends EventEmitter implements PromiseLike<any>
      */
     constructor(loop: Loop);
     /**
+     * Boolean indicating if the loop is stopped.
+     * @readonly
+     */
+    readonly isStopped: boolean;
+    /**
+     * Boolean indicating if the loop is pending.
+     * @readonly
+     */
+    readonly isPending: boolean;
+    /**
      * Starts or restarts the loop.
      */
     run(): this;
+    /**
+     * Stops the loop.
+     */
+    stop(): void;
     /**
      * Called when a loop step is finished.
      */

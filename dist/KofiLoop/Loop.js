@@ -74,6 +74,7 @@ var Loop = /** @class */ (function (_super) {
     Loop.prototype.isStopped = function () {
         if ((this.status.isStopped || this.status.lastThrownError != null) && !this.finishEventCalled) {
             this.emit('finish');
+            this.emit('afterFinish');
             this.finishEventCalled = true;
         }
         return this.status.isStopped || this.status.lastThrownError != null;
@@ -97,6 +98,7 @@ var Loop = /** @class */ (function (_super) {
             if (_this.isStopped())
                 return;
             _this.emit('stepExecute');
+            _this.emit('afterStepExecute');
             var handler = _this.loopHandler;
             if (typeof handler === "function") {
                 try {
@@ -139,10 +141,10 @@ var Loop = /** @class */ (function (_super) {
      * Finishs the current step and starts a new step.
      */
     Loop.prototype.finishStep = function () {
-        if (!this.status.isPending)
+        if (!this.status.isPending) {
             this.emit('stepFinish');
-        if (this.isStopped())
-            this.emit('finish');
+            this.emit('afterStepFinish');
+        }
         if (!this.isStopped() && !this.status.isPending)
             this.executeStep();
     };
@@ -157,6 +159,8 @@ var Loop = /** @class */ (function (_super) {
         });
         this.on('stepFinish', function () {
             _this.status.deltaTime = _this.measureTime(_this.status.deltaTimeStart);
+        });
+        this.on('afterStepFinish', function () {
             status.loopStep++;
         });
     };
@@ -211,6 +215,28 @@ var LoopSelf = /** @class */ (function () {
          */
         get: function () {
             return this.loop.status.loopStep;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(LoopSelf.prototype, "isStopped", {
+        /**
+         * Boolean indicating if the loop is stopped.
+         * @readonly
+         */
+        get: function () {
+            return this.loop.isStopped();
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(LoopSelf.prototype, "isPending", {
+        /**
+         * Boolean indicating if the loop is pending.
+         * @readonly
+         */
+        get: function () {
+            return this.loop.status.isPending;
         },
         enumerable: true,
         configurable: true
@@ -282,12 +308,40 @@ var LoopReturn = /** @class */ (function (_super) {
         _this.listenEvents();
         return _this;
     }
+    Object.defineProperty(LoopReturn.prototype, "isStopped", {
+        /**
+         * Boolean indicating if the loop is stopped.
+         * @readonly
+         */
+        get: function () {
+            return this.loop.isStopped();
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(LoopReturn.prototype, "isPending", {
+        /**
+         * Boolean indicating if the loop is pending.
+         * @readonly
+         */
+        get: function () {
+            return this.loop.status.isPending;
+        },
+        enumerable: true,
+        configurable: true
+    });
     /**
      * Starts or restarts the loop.
      */
     LoopReturn.prototype.run = function () {
         this.loop.run();
         return this;
+    };
+    /**
+     * Stops the loop.
+     */
+    LoopReturn.prototype.stop = function () {
+        this.loop.status.isStopped = true;
     };
     /**
      * Called when a loop step is finished.
@@ -367,7 +421,7 @@ var LoopReturn = /** @class */ (function (_super) {
         var _this = this;
         var loop = this.loop;
         var status = this.loop.status;
-        loop.on('stepStart', function () {
+        loop.on('stepFinish', function () {
             _this.emit('step', _this.loop.loopSelf, status.lastReturnedValue);
             _this.emit('step-' + status.loopStep, _this.loop.loopSelf, status.lastReturnedValue);
             return;
@@ -389,3 +443,5 @@ var LoopReturn = /** @class */ (function (_super) {
     return LoopReturn;
 }(events_1.EventEmitter));
 exports.LoopReturn = LoopReturn;
+
+//# sourceMappingURL=Loop.js.map

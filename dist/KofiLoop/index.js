@@ -35,3 +35,5 @@ function registerLoop(handler, interval) {
     return new (Loop_1.default.bind.apply(Loop_1.default, [void 0, handler, interval].concat(args)))().getReturnValue();
 }
 exports.registerLoop = registerLoop;
+
+//# sourceMappingURL=index.js.map
