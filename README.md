@@ -1,8 +1,11 @@
-# KofiLoop
+# KofiLoop 
 
 Fast and powered loops under caffeine.
 
 ![](https://raw.githubusercontent.com/Norech/KofiLoop/master/resources/img/carbon.png)
+
+[![Build Status](https://travis-ci.org/Norech/KofiLoop.svg?branch=master)](https://travis-ci.org/Norech/KofiLoop) 
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FNorech%2FKofiLoop.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FNorech%2FKofiLoop?ref=badge_shield)
 
 ## Getting Started
 

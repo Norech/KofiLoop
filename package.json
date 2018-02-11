@@ -9,7 +9,7 @@
         "build": "./node_modules/.bin/gulp build",
         "doc": "./node_modules/.bin/gulp doc",
         "watch": "./node_modules/.bin/gulp watch",
-        "test": "./node_modules/.bin/mocha"
+        "test": "./node_modules/.bin/mocha --exit"
     },
     "keywords": [],
     "author": "Alexis Norech <alexis.norech@gmail.com>",
