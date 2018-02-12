@@ -1,6 +1,6 @@
 {
     "name": "kofiloop",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Fast and powered loops under caffeine",
     "main": "dist/KofiLoop/index.js",
     "types": "dist/KofiLoop/index.d.ts",
