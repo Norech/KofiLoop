@@ -126,6 +126,43 @@ describe('LoopReturn', function() {
         });
     });
 
+    describe('#stepStart()', function() {
+        it('should be called at any step', function(done) {
+            var calls = 0;
+            kofiloop.startLoop(function() {
+                if (this.step == 10)
+                    this.stop();
+            }, 1)
+
+            .stepStart(function() {
+                calls++;
+            })
+
+            .end(function() {
+                assert.equal(calls, 10);
+                done();
+            });
+        });
+        it('should give the loop in first callback argument', function() {
+            var loopSelf;
+            kofiloop.startLoop(function() {
+                loopSelf = this;
+            }, 1)
+
+            .stepStart(function(loop) {
+                assert.deepEqual(loop, loopSelf);
+                loop.stop();
+            });
+        });
+        it('should register the callback for specific step when second argument is set', function(done) {
+            kofiloop.startLoop(function() {}, 1)
+
+            .stepStart(function(loop) {
+                done();
+            }, 1);
+        });
+    });
+
     describe('#step()', function() {
         it('should be called at any step', function(done) {
             var calls = 0;

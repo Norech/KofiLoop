@@ -25,6 +25,10 @@ gulp.task('build', function() {
     );
 });
 
+gulp.task("test", run('node_modules/.bin/mocha --exit', {
+    env: { NODE_ENV: 'production' }
+}));
+
 gulp.task('watch', function() {
     return gulp.watch('src/**/*.ts', ['build']);
 });

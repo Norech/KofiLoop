@@ -98,6 +98,7 @@ export default class Loop extends EventEmitter
     isStopped()
     {
         if((this.status.isStopped || this.status.lastThrownError != null) && !this.finishEventCalled){
+            this.emit('beforeFinish');
             this.emit('finish');
             this.emit('afterFinish');
             this.finishEventCalled = true;
@@ -126,6 +127,7 @@ export default class Loop extends EventEmitter
         setTimeout(() => {
             if(this.isStopped()) return;
                 
+            this.emit('beforeStepExecute');
             this.emit('stepExecute');
             this.emit('afterStepExecute');
 
@@ -188,6 +190,7 @@ export default class Loop extends EventEmitter
     {  
         if(!this.status.isPending)
         {
+            this.emit('beforeStepFinish');
             this.emit('stepFinish')
             this.emit('afterStepFinish');
         }
@@ -406,6 +409,21 @@ export class LoopReturn extends EventEmitter implements PromiseLike<any>
     }
 
     /**
+     * Called when a loop step is started.
+     */
+    stepStart(callback: (loop: LoopSelf)=>void, step?: number)
+    {
+        if(typeof step !== "undefined"){
+            var stepInt = parseInt(step.toString());
+            this.on('stepstart-' + stepInt, callback);
+        }else{
+            this.on('stepstart', callback);
+        }
+
+        return this;
+    }
+
+    /**
      * Called when a loop step is finished.
      */
     step(callback: (loop: LoopSelf, value: any)=>void, step?: number)
@@ -498,6 +516,12 @@ export class LoopReturn extends EventEmitter implements PromiseLike<any>
         var loop = this.loop;
         var status = this.loop.status;
 
+        loop.on('stepExecute', () =>
+        {
+            this.emit('stepstart', this.loop.loopSelf, status.lastReturnedValue);
+            this.emit('stepstart-' + status.loopStep, this.loop.loopSelf, status.lastReturnedValue);
+            return;
+        });
         loop.on('stepFinish', () =>
         {
             this.emit('step', this.loop.loopSelf, status.lastReturnedValue);

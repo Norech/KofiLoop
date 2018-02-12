@@ -5,11 +5,12 @@
     "main": "dist/KofiLoop/index.js",
     "types": "dist/KofiLoop/index.d.ts",
     "scripts": {
-        "prepare": "./node_modules/.bin/gulp",
-        "build": "./node_modules/.bin/gulp build",
-        "doc": "./node_modules/.bin/gulp doc",
-        "watch": "./node_modules/.bin/gulp watch",
-        "test": "./node_modules/.bin/mocha --exit"
+        "prepare": "node_modules/.bin/gulp",
+        "build": "node_modules/.bin/gulp build",
+        "doc": "node_modules/.bin/gulp doc",
+        "watch": "node_modules/.bin/gulp watch",
+        "test": "node_modules/.bin/gulp test",
+        "tested-build": "npm run build && npm run test && node example.js"
     },
     "keywords": [],
     "author": "Alexis Norech <alexis.norech@gmail.com>",

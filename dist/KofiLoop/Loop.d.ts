@@ -156,6 +156,10 @@ export declare class LoopReturn extends EventEmitter implements PromiseLike<any>
      */
     stop(): void;
     /**
+     * Called when a loop step is started.
+     */
+    stepStart(callback: (loop: LoopSelf) => void, step?: number): this;
+    /**
      * Called when a loop step is finished.
      */
     step(callback: (loop: LoopSelf, value: any) => void, step?: number): this;

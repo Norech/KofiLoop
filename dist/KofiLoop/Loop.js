@@ -73,6 +73,7 @@ var Loop = /** @class */ (function (_super) {
      */
     Loop.prototype.isStopped = function () {
         if ((this.status.isStopped || this.status.lastThrownError != null) && !this.finishEventCalled) {
+            this.emit('beforeFinish');
             this.emit('finish');
             this.emit('afterFinish');
             this.finishEventCalled = true;
@@ -97,6 +98,7 @@ var Loop = /** @class */ (function (_super) {
         setTimeout(function () {
             if (_this.isStopped())
                 return;
+            _this.emit('beforeStepExecute');
             _this.emit('stepExecute');
             _this.emit('afterStepExecute');
             var handler = _this.loopHandler;
@@ -142,6 +144,7 @@ var Loop = /** @class */ (function (_super) {
      */
     Loop.prototype.finishStep = function () {
         if (!this.status.isPending) {
+            this.emit('beforeStepFinish');
             this.emit('stepFinish');
             this.emit('afterStepFinish');
         }
@@ -344,6 +347,19 @@ var LoopReturn = /** @class */ (function (_super) {
         this.loop.status.isStopped = true;
     };
     /**
+     * Called when a loop step is started.
+     */
+    LoopReturn.prototype.stepStart = function (callback, step) {
+        if (typeof step !== "undefined") {
+            var stepInt = parseInt(step.toString());
+            this.on('stepstart-' + stepInt, callback);
+        }
+        else {
+            this.on('stepstart', callback);
+        }
+        return this;
+    };
+    /**
      * Called when a loop step is finished.
      */
     LoopReturn.prototype.step = function (callback, step) {
@@ -421,6 +437,11 @@ var LoopReturn = /** @class */ (function (_super) {
         var _this = this;
         var loop = this.loop;
         var status = this.loop.status;
+        loop.on('stepExecute', function () {
+            _this.emit('stepstart', _this.loop.loopSelf, status.lastReturnedValue);
+            _this.emit('stepstart-' + status.loopStep, _this.loop.loopSelf, status.lastReturnedValue);
+            return;
+        });
         loop.on('stepFinish', function () {
             _this.emit('step', _this.loop.loopSelf, status.lastReturnedValue);
             _this.emit('step-' + status.loopStep, _this.loop.loopSelf, status.lastReturnedValue);
