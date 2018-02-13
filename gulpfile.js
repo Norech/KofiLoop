@@ -1,3 +1,4 @@
+var fs = require('fs');
 var gulp = require('gulp');
 var merge = require('merge2');
 var path = require('path');
@@ -33,8 +34,21 @@ gulp.task('watch', function() {
     return gulp.watch('src/**/*.ts', ['build']);
 });
 
-gulp.task("doc", run('node_modules/.bin/typedoc --readme none --name "KofiLoop" --entryPoint "KofiLoop" --mode modules --theme node_modules/typedoc-clarity-theme/bin --excludeProtected --external-modulemap ".*/([\\w\\-_]+)/\" --out docs/ src/', {
+gulp.task("doc:web", run('node_modules/.bin/typedoc --readme none --name "KofiLoop" --entryPoint "KofiLoop" --mode modules --theme node_modules/typedoc-clarity-theme/bin --excludeProtected --external-modulemap ".*/([\\w\\-_]+)/\" --out docs/ src/', {
     env: { NODE_ENV: 'production' }
 }));
+
+// Broken feature, need a patch from the author of the theme.
+gulp.task("doc:dash", run('node_modules/.bin/typedoc --readme README.md --name "KofiLoop" --entryPoint "KofiLoop" --mode modules --theme node_modules/typedoc-dash-theme/bin --excludeProtected --external-modulemap ".*/([\\w\\-_]+)/\" --out docs/kofiloop.docset src/', {
+    env: {
+        NODE_ENV: 'production',
+        TYPEDOC_DASH_ICONS_PATH: 'resources/icons'
+    }
+}));
+
+gulp.task('doc', ['doc:web'], function(cb){
+    fs.writeFile(__dirname + '/docs/CNAME', 'kofiloop.js.org', cb);
+    // because .gitignore don't work very well with the CNAME file.
+});
 
 gulp.task('default', ['build', 'doc']);
