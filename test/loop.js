@@ -82,6 +82,50 @@ describe('LoopReturn', function() {
         });
     });
 
+    describe('#start()', function(done) {
+        it('should be called when loop isn\'t fully started', function() {
+            var start = false;
+
+            kofiloop.startLoop(function() {
+                assert.ok(start);
+            }, 1)
+
+            .start(function(loop) {
+                start = true;
+            });
+        });
+        it('should give LoopSelf in first argument', function() {
+            kofiloop.startLoop(function() {
+                this.stop();
+            }, 1)
+
+            .start(function(loop) {
+                assert.ok(loop instanceof kofiloop_loop.LoopSelf);
+            });
+        });
+    });
+
+    describe('#terminate()', function(done) {
+        it('should be called when loop is stopped', function(done) {
+            kofiloop.startLoop(function() {
+                this.stop();
+            }, 1)
+
+            .terminated(function(loop) {
+                done();
+            });
+        });
+        it('should give LoopSelf in first argument', function() {
+            kofiloop.startLoop(function() {
+                this.stop();
+            }, 1)
+
+            .terminated(function(loop) {
+                assert.ok(loop instanceof kofiloop_loop.LoopSelf);
+            });
+        });
+    });
+
     describe('#end()', function(done) {
         it('should be called when loop is stopped', function(done) {
             kofiloop.startLoop(function() {
@@ -237,7 +281,7 @@ describe('LoopReturn', function() {
     });
 
     describe('#run()', function() {
-        it('should stop the loop when called', function(done) {
+        it('should start the loop when called', function(done) {
             kofiloop.registerLoop(function() {}, 1)
 
             .on('step-1', function() {

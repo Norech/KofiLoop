@@ -186,7 +186,7 @@ export declare class LoopReturn extends EventEmitter implements PromiseLike<any>
     /**
      * Called when the loop is terminated, even if there is an error.
      */
-    terminated(callback: (value: any) => any): this;
+    terminated(callback: (loop: LoopSelf) => any): this;
     /**
      * Called when the loop is stopped.
      */
