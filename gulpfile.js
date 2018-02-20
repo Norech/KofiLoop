@@ -1,3 +1,5 @@
+//@ts-check
+
 var fs = require('fs');
 var gulp = require('gulp');
 var merge = require('merge2');
@@ -47,7 +49,12 @@ gulp.task("doc:dash", run('node_modules/.bin/typedoc --readme README.md --name "
 }));
 
 gulp.task('doc', ['doc:web'], function(cb){
-    fs.writeFile(__dirname + '/docs/CNAME', 'kofiloop.js.org', cb);
+    var js = fs.readFileSync(__dirname + '/docs/assets/js/search.js').toString();
+    js = js.replace('ï»¿', '');
+
+    fs.writeFile(__dirname + '/docs/assets/js/search.js', js, function(){
+        fs.writeFile(__dirname + '/docs/CNAME', 'kofiloop.js.org', cb);
+    });
     // because .gitignore don't work very well with the CNAME file.
 });
 

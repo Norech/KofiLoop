@@ -80,6 +80,7 @@ export default class Loop extends EventEmitter
 
     /**
      * Runs the loop.
+     * @throws {\Error} if loop is not stopped.
      */
     run()
     {
@@ -330,8 +331,6 @@ export class LoopSelf
      */
     startLoop(handler: Promise<any> | ((this: LoopSelf, ...args: any[])=>any), interval: number, ...args: any[])
     {
-        this.loop.status.isPending = true;
-
         return startLoop(handler, interval, ...args).parent(this.loop);
     }
 
@@ -409,6 +408,48 @@ export class LoopReturn extends EventEmitter implements PromiseLike<any>
     }
 
     /**
+     * Sets a loop as parent, and set pending for the parent loop until the end of the loop.
+     * @param loop The parent loop
+     * @throws {\Error} if parent is already defined.
+     */
+    parent(loop: Loop)
+    {
+        if(typeof this.parentLoop !== "undefined")
+            throw new Error("Parent is already set");
+
+        this.parentLoop = loop;
+        this.parentLoop.status.isPending = true;
+        return this;
+    }
+
+    /**
+     * Starts a loop after the end of the current loop.
+     * @param handler The function to loop
+     * @param interval The interval in milliseconds
+     * @param args Some arguments to pass to function
+     * 
+     * @see {@link LoopSelf} for handler scope ('this' reference).
+     */
+    startLoop(handler: Promise<any> | ((this: LoopSelf, ...args: any[])=>any), interval: number, ...args: any[])
+    {
+        var loop = registerLoop(handler, interval, ...args)
+
+        this.loop.once('finish', () => loop.run());
+
+        return loop;
+    }
+
+    /**
+     * Called when a loop is started.
+     */
+    start(callback: (loop: LoopSelf)=>void)
+    {
+        this.on('start', callback);
+
+        return this;
+    }
+
+    /**
      * Called when a loop step is started.
      */
     stepStart(callback: (loop: LoopSelf)=>void, step?: number)
@@ -439,38 +480,17 @@ export class LoopReturn extends EventEmitter implements PromiseLike<any>
     }
 
     /**
-     * Sets a loop as parent loop.
-     * @param loop The parent loop
+     * Called when the loop is terminated, even if there is an error.
      */
-    parent(loop: Loop)
+    terminated(callback: (value: any)=>any)
     {
-        if(typeof this.parentLoop !== "undefined")
-            throw new Error("Parent is already set");
+        this.once('terminated', callback);
 
-        this.parentLoop = loop;
-        this.parentLoop.status.isPending = true;
         return this;
     }
 
     /**
-     * Starts a loop after the end of the current loop.
-     * @param handler The function to loop
-     * @param interval The interval in milliseconds
-     * @param args Some arguments to pass to function
-     * 
-     * @see {@link LoopSelf} for handler scope ('this' reference).
-     */
-    startLoop(handler: Promise<any> | ((this: LoopSelf, ...args: any[])=>any), interval: number, ...args: any[])
-    {
-        var loop = registerLoop(handler, interval, ...args)
-
-        this.loop.once('finish', () => loop.run());
-
-        return loop;
-    }
-
-    /**
-     * Called when loop is stopped.
+     * Called when the loop is stopped.
      */
     end(callback: (value: any)=>any, errorCallback?: (err: any)=>any)
     {
@@ -482,7 +502,7 @@ export class LoopReturn extends EventEmitter implements PromiseLike<any>
     }
 
     /**
-     * Alias for {@link end}: Called when loop is stopped.
+     * Alias for {@link end}: Called when the loop is stopped.
      */
     then(callback: (value: any)=>any, errorCallback: (err: any)=>any)
     {
@@ -516,17 +536,19 @@ export class LoopReturn extends EventEmitter implements PromiseLike<any>
         var loop = this.loop;
         var status = this.loop.status;
 
+        loop.on('start', () => 
+        {
+            this.emit('start', loop.loopSelf);
+        });
         loop.on('stepExecute', () =>
         {
-            this.emit('stepstart', this.loop.loopSelf, status.lastReturnedValue);
-            this.emit('stepstart-' + status.loopStep, this.loop.loopSelf, status.lastReturnedValue);
-            return;
+            this.emit('stepstart', loop.loopSelf, status.lastReturnedValue);
+            this.emit('stepstart-' + status.loopStep, loop.loopSelf, status.lastReturnedValue);
         });
         loop.on('stepFinish', () =>
         {
-            this.emit('step', this.loop.loopSelf, status.lastReturnedValue);
-            this.emit('step-' + status.loopStep, this.loop.loopSelf, status.lastReturnedValue);
-            return;
+            this.emit('step', loop.loopSelf, status.lastReturnedValue);
+            this.emit('step-' + status.loopStep, loop.loopSelf, status.lastReturnedValue);
         });
 
         loop.once('finish', () =>
@@ -540,7 +562,7 @@ export class LoopReturn extends EventEmitter implements PromiseLike<any>
                 this.emit('end', status.lastReturnedValue);
             }
 
-            this.emit('terminated', this.loop);
+            this.emit('terminated', loop);
 
             if(this.parentLoop != null){
                 this.parentLoop.status.isPending = false;

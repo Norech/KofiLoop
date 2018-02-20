@@ -57,6 +57,7 @@ var Loop = /** @class */ (function (_super) {
     };
     /**
      * Runs the loop.
+     * @throws {\Error} if loop is not stopped.
      */
     Loop.prototype.run = function () {
         if (this.status.isStopped) {
@@ -278,7 +279,6 @@ var LoopSelf = /** @class */ (function () {
         for (var _i = 2; _i < arguments.length; _i++) {
             args[_i - 2] = arguments[_i];
         }
-        this.loop.status.isPending = true;
         return index_1.startLoop.apply(void 0, [handler, interval].concat(args)).parent(this.loop);
     };
     // EVENTS
@@ -347,34 +347,9 @@ var LoopReturn = /** @class */ (function (_super) {
         this.loop.status.isStopped = true;
     };
     /**
-     * Called when a loop step is started.
-     */
-    LoopReturn.prototype.stepStart = function (callback, step) {
-        if (typeof step !== "undefined") {
-            var stepInt = parseInt(step.toString());
-            this.on('stepstart-' + stepInt, callback);
-        }
-        else {
-            this.on('stepstart', callback);
-        }
-        return this;
-    };
-    /**
-     * Called when a loop step is finished.
-     */
-    LoopReturn.prototype.step = function (callback, step) {
-        if (typeof step !== "undefined") {
-            var stepInt = parseInt(step.toString());
-            this.on('step-' + stepInt, callback);
-        }
-        else {
-            this.on('step', callback);
-        }
-        return this;
-    };
-    /**
-     * Sets a loop as parent loop.
+     * Sets a loop as parent, and set pending for the parent loop until the end of the loop.
      * @param loop The parent loop
+     * @throws {\Error} if parent is already defined.
      */
     LoopReturn.prototype.parent = function (loop) {
         if (typeof this.parentLoop !== "undefined")
@@ -401,7 +376,47 @@ var LoopReturn = /** @class */ (function (_super) {
         return loop;
     };
     /**
-     * Called when loop is stopped.
+     * Called when a loop is started.
+     */
+    LoopReturn.prototype.start = function (callback) {
+        this.on('start', callback);
+        return this;
+    };
+    /**
+     * Called when a loop step is started.
+     */
+    LoopReturn.prototype.stepStart = function (callback, step) {
+        if (typeof step !== "undefined") {
+            var stepInt = parseInt(step.toString());
+            this.on('stepstart-' + stepInt, callback);
+        }
+        else {
+            this.on('stepstart', callback);
+        }
+        return this;
+    };
+    /**
+     * Called when a loop step is finished.
+     */
+    LoopReturn.prototype.step = function (callback, step) {
+        if (typeof step !== "undefined") {
+            var stepInt = parseInt(step.toString());
+            this.on('step-' + stepInt, callback);
+        }
+        else {
+            this.on('step', callback);
+        }
+        return this;
+    };
+    /**
+     * Called when the loop is terminated, even if there is an error.
+     */
+    LoopReturn.prototype.terminated = function (callback) {
+        this.once('terminated', callback);
+        return this;
+    };
+    /**
+     * Called when the loop is stopped.
      */
     LoopReturn.prototype.end = function (callback, errorCallback) {
         this.once('end', callback);
@@ -410,7 +425,7 @@ var LoopReturn = /** @class */ (function (_super) {
         return this;
     };
     /**
-     * Alias for {@link end}: Called when loop is stopped.
+     * Alias for {@link end}: Called when the loop is stopped.
      */
     LoopReturn.prototype.then = function (callback, errorCallback) {
         return this.end(callback, errorCallback);
@@ -437,15 +452,16 @@ var LoopReturn = /** @class */ (function (_super) {
         var _this = this;
         var loop = this.loop;
         var status = this.loop.status;
+        loop.on('start', function () {
+            _this.emit('start', loop.loopSelf);
+        });
         loop.on('stepExecute', function () {
-            _this.emit('stepstart', _this.loop.loopSelf, status.lastReturnedValue);
-            _this.emit('stepstart-' + status.loopStep, _this.loop.loopSelf, status.lastReturnedValue);
-            return;
+            _this.emit('stepstart', loop.loopSelf, status.lastReturnedValue);
+            _this.emit('stepstart-' + status.loopStep, loop.loopSelf, status.lastReturnedValue);
         });
         loop.on('stepFinish', function () {
-            _this.emit('step', _this.loop.loopSelf, status.lastReturnedValue);
-            _this.emit('step-' + status.loopStep, _this.loop.loopSelf, status.lastReturnedValue);
-            return;
+            _this.emit('step', loop.loopSelf, status.lastReturnedValue);
+            _this.emit('step-' + status.loopStep, loop.loopSelf, status.lastReturnedValue);
         });
         loop.once('finish', function () {
             if (status.lastThrownError != null) {
@@ -454,7 +470,7 @@ var LoopReturn = /** @class */ (function (_super) {
             else {
                 _this.emit('end', status.lastReturnedValue);
             }
-            _this.emit('terminated', _this.loop);
+            _this.emit('terminated', loop);
             if (_this.parentLoop != null) {
                 _this.parentLoop.status.isPending = false;
                 _this.parentLoop.finishStep();

@@ -35,6 +35,7 @@ export default class Loop extends EventEmitter {
     measureTime(start?: [number, number]): number | [number, number];
     /**
      * Runs the loop.
+     * @throws {\Error} if loop is not stopped.
      */
     run(): void;
     /**
@@ -156,16 +157,9 @@ export declare class LoopReturn extends EventEmitter implements PromiseLike<any>
      */
     stop(): void;
     /**
-     * Called when a loop step is started.
-     */
-    stepStart(callback: (loop: LoopSelf) => void, step?: number): this;
-    /**
-     * Called when a loop step is finished.
-     */
-    step(callback: (loop: LoopSelf, value: any) => void, step?: number): this;
-    /**
-     * Sets a loop as parent loop.
+     * Sets a loop as parent, and set pending for the parent loop until the end of the loop.
      * @param loop The parent loop
+     * @throws {\Error} if parent is already defined.
      */
     parent(loop: Loop): this;
     /**
@@ -178,11 +172,27 @@ export declare class LoopReturn extends EventEmitter implements PromiseLike<any>
      */
     startLoop(handler: Promise<any> | ((this: LoopSelf, ...args: any[]) => any), interval: number, ...args: any[]): LoopReturn;
     /**
-     * Called when loop is stopped.
+     * Called when a loop is started.
+     */
+    start(callback: (loop: LoopSelf) => void): this;
+    /**
+     * Called when a loop step is started.
+     */
+    stepStart(callback: (loop: LoopSelf) => void, step?: number): this;
+    /**
+     * Called when a loop step is finished.
+     */
+    step(callback: (loop: LoopSelf, value: any) => void, step?: number): this;
+    /**
+     * Called when the loop is terminated, even if there is an error.
+     */
+    terminated(callback: (value: any) => any): this;
+    /**
+     * Called when the loop is stopped.
      */
     end(callback: (value: any) => any, errorCallback?: (err: any) => any): this;
     /**
-     * Alias for {@link end}: Called when loop is stopped.
+     * Alias for {@link end}: Called when the loop is stopped.
      */
     then(callback: (value: any) => any, errorCallback: (err: any) => any): this;
     /**
